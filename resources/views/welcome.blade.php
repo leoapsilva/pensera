@@ -14,14 +14,14 @@
         <div class="container">
             <tabs name="bla">
                 <tab name="Course" :selected="true">
-                    <h1>Título do curso </h1>
-                    <course-component title="Titulo do Curso" description="Descrição curta do curso vinda do attributo da tag">
-                        <lecture-component title="Aula 1" description="Descrição da aula 1" link="KQ6zr6kCPj8" :selected="true"> </lecture-component>
-                        <lecture-component title="Aula 2" description="Descrição da aula 2" link="HCfPhZQz2CE"> </lecture-component>
-                        <lecture-component title="Aula 3" description="Descrição da aula 3" link="OPf0YbXqDm0"> </lecture-component>
-                        <lecture-component title="Aula 4" description="Descrição da aula 4" link="ZbZSe6N_BXs"> </lecture-component>
-                        <lecture-component title="Aula 5" description="Descrição da aula 5" link="ZbZSe6N_BXs"> </lecture-component>
-                        <lecture-component title="Aula 6" description="Descrição da aula 6" link="ZbZSe6N_BXs"> </lecture-component>
+                    <h1>Pop & Dance </h1>
+                    <course-component name="Titulo do Curso" description="Descrição curta do curso vinda do attributo da tag">
+                        <lecture-component id="1" name="Aula 1" description="Descrição da aula 1" link="KQ6zr6kCPj8" :selected="true"> </lecture-component>
+                        <lecture-component id="2" name="Aula 2" description="Descrição da aula 2" link="HCfPhZQz2CE"> </lecture-component>
+                        <lecture-component id="3" name="Aula 3" description="Descrição da aula 3" link="OPf0YbXqDm0"> </lecture-component>
+                        <lecture-component id="4" name="Aula 4" description="Descrição da aula 4" link="ZbZSe6N_BXs"> </lecture-component>
+                        <lecture-component id="5" name="Aula 5" description="Descrição da aula 5" link="ru0K8uYEZWw"> </lecture-component>
+                        <lecture-component id="6" name="Aula 6" description="Descrição da aula 6" link="wyx6JDQCslE"> </lecture-component>    
                     </course-component>
                 </tab>
                 <tab name="Students" >

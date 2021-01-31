@@ -1944,9 +1944,58 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    title: {
+    name: {
       string: ''
     },
     description: {
@@ -1956,33 +2005,98 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       lectures: [],
-      courseTitle: this.title,
+      nextLecture: 0,
+      courseName: this.name,
       courseDescription: this.description,
-      lectureTitle: '',
-      lectureDescription: ''
+      selectedLecture: [],
+      lectureName: '',
+      lectureDescription: '',
+      lectureLink: '',
+      lectureSRC: '',
+      newName: '',
+      newDescription: '',
+      newLink: '',
+      newLectures: [],
+      editLectureName: false,
+      editLectureDescription: false,
+      editLectureLink: false,
+      addLectureActive: false
     };
   },
   created: function created() {
     this.lectures = this.$children;
+    this.nextLecture = this.lectures.length + 1;
   },
   mounted: function mounted() {
     var _this = this;
 
     this.lectures.forEach(function (lecture) {
+      _this.newLectures.push({
+        "id": _this.nextLecture,
+        "name": lecture.name,
+        "description": lecture.description,
+        "link": lecture.link,
+        "active": lecture.active
+      });
+
+      _this.nextLecture++;
+    });
+    this.lectures.forEach(function (lecture) {
       if (lecture.active) {
-        _this.lectureTitle = lecture.title;
+        _this.lectureName = lecture.name;
         _this.lectureDescription = lecture.description;
       }
     });
+    this.lectureLink = this.newLectures[0].link;
+    this.selectedLecture = this.newLectures[0];
+    this.setLectureSRC();
     console.log(this.$children);
   },
   methods: {
     selectLecture: function selectLecture(selectedLecture) {
-      this.lectureTitle = selectedLecture.title;
+      this.lectureName = selectedLecture.name;
       this.lectureDescription = selectedLecture.description;
+      this.lectureLink = selectedLecture.link;
       this.lectures.forEach(function (lecture) {
-        lecture.active = lecture.title == selectedLecture.title;
+        lecture.active = lecture.name == selectedLecture.name;
       });
+      this.selectedLecture = selectedLecture;
+      this.setLectureSRC();
+    },
+    setLectureSRC: function setLectureSRC() {
+      this.lectureSRC = 'https://www.youtube.com/embed/' + this.lectureLink + '?rel=0';
+    },
+    addLecture: function addLecture() {
+      var newLecture = {
+        "id": this.nextLecture,
+        "name": this.newName,
+        "description": this.newDescription,
+        "link": this.newLink,
+        "active": true
+      };
+      this.newLectures.push(newLecture);
+      this.selectLecture(newLecture);
+      this.nextLecture++;
+      this.toggleAddLecture();
+    },
+    deleteLecture: function deleteLecture() {
+      this.nextLecture--;
+      var tempId = this.selectedLecture.id;
+      alert(tempId);
+      this.newLectures.splice(tempId - 1, 1);
+      this.selectLecture(this.newLectures[tempId + 1]);
+    },
+    toggleEditLectureName: function toggleEditLectureName() {
+      this.editLectureName = !this.editLectureName;
+    },
+    toggleEditLectureDescription: function toggleEditLectureDescription() {
+      this.editLectureDescription = !this.editLectureDescription;
+    },
+    toggleEditLectureLink: function toggleEditLectureLink() {
+      this.editLectureLink = !this.editLectureLink;
+    },
+    toggleAddLecture: function toggleAddLecture() {
+      this.addLectureActive = !this.addLectureActive;
     }
   }
 });
@@ -2005,7 +2119,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    title: {
+    name: {
       string: '',
       required: true
     },
@@ -2028,23 +2142,26 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.active = this.selected;
+    this.newName = this.name;
+    this.newDescription = this.description;
+    this.newLink = this.link;
   },
   computed: {
     //href="#list-home" 
     href: function href() {
-      return '#list-' + this.title.toLowerCase().replace(/ /g, '-');
+      return '#list-' + this.name.toLowerCase().replace(/ /g, '-');
     },
     //id="list-home-list"
     id: function id() {
-      return 'list-' + this.title.toLowerCase().replace(/ /g, '-') + '-list';
+      return 'list-' + this.name.toLowerCase().replace(/ /g, '-') + '-list';
     },
     //aria-controls="home"
     ariaControls: function ariaControls() {
-      return this.title.toLowerCase().replace(/ /g, '-');
+      return this.name.toLowerCase().replace(/ /g, '-');
     },
     //aria-labelledby="list-home-list"
     ariaLabelledby: function ariaLabelledby() {
-      return 'list-' + this.title.toLowerCase().replace(/ /g, '-') + '-list';
+      return 'list-' + this.name.toLowerCase().replace(/ /g, '-') + '-list';
     },
     //src="https://www.youtube.com/embed/HCfPhZQz2CE?rel=0"
     src: function src() {
@@ -37871,49 +37988,173 @@ var render = function() {
     _c("div", { staticClass: "course" }, [
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-8 " }, [
+          _vm._v(
+            "\n                " +
+              _vm._s(this.lectureSRC) +
+              "\n                "
+          ),
           _c(
             "div",
             { staticClass: "tab-content", attrs: { id: "nav-tabContent" } },
-            _vm._l(_vm.lectures, function(lecture) {
-              return _c(
+            [
+              _c(
                 "div",
-                {
-                  staticClass: "tab-pane fade show",
-                  class: { active: lecture.active },
-                  attrs: {
-                    id: lecture.active,
-                    role: "tabpanel",
-                    "aria-labelledby": "list-home-list"
-                  }
-                },
+                { staticClass: "embed-responsive embed-responsive-16by9" },
                 [
-                  _c(
-                    "div",
-                    { staticClass: "embed-responsive embed-responsive-16by9" },
-                    [
-                      _c("iframe", {
-                        staticClass: "embed-responsive-item",
-                        attrs: { src: lecture.src, allowfullscreen: "" }
-                      })
-                    ]
-                  )
+                  _c("iframe", {
+                    staticClass: "embed-responsive-item",
+                    attrs: { src: _vm.lectureSRC, allowfullscreen: "" }
+                  })
                 ]
               )
-            }),
-            0
+            ]
           )
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-4" }, [
+        _c("div", { staticClass: "col-4 clearfix" }, [
           _c(
             "div",
             { staticClass: "card bg-white", staticStyle: { width: "25rem" } },
             [
               _c("div", { staticClass: "card-header" }, [
-                _c("h5", [_vm._v(_vm._s(_vm.courseTitle))])
+                _c("div", { staticClass: "col-12" }, [
+                  _c("h5", [_vm._v(_vm._s(_vm.courseName))])
+                ])
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
+                _vm.addLectureActive
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "card text-primary bg-white",
+                        staticStyle: { width: "23rem" }
+                      },
+                      [
+                        _c("div", { staticClass: "card-header" }, [
+                          _vm._v(
+                            "\n                                New Lecture\n                            "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "card-body" }, [
+                          _c("div", { staticClass: "form-group col-md-12" }, [
+                            _c("label", { attrs: { for: "newName" } }, [
+                              _vm._v("Title")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.newName,
+                                  expression: "newName"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { type: "text", placeholder: "Aula..." },
+                              domProps: { value: _vm.newName },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.newName = $event.target.value
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group col-md-12" }, [
+                            _c("label", { attrs: { for: "newDescription" } }, [
+                              _vm._v("Title")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.newDescription,
+                                  expression: "newDescription"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                placeholder: "Descrição da aula..."
+                              },
+                              domProps: { value: _vm.newDescription },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.newDescription = $event.target.value
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-md-12 my-1" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "sr-only",
+                                attrs: { for: "newLink" }
+                              },
+                              [_vm._v("video ID")]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "input-group" }, [
+                              _vm._m(0),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.newLink,
+                                    expression: "newLink"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: { type: "text", placeholder: "v1de01D" },
+                                domProps: { value: _vm.newLink },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.newLink = $event.target.value
+                                  }
+                                }
+                              })
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-md-2" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn btn-outline-primary float-left",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.addLecture()
+                                  }
+                                }
+                              },
+                              [_vm._v("Add")]
+                            )
+                          ])
+                        ])
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
                 _c(
                   "div",
                   {
@@ -37921,13 +38162,188 @@ var render = function() {
                     staticStyle: { width: "25rem" }
                   },
                   [
+                    _c("div", { staticClass: "card-header clearfix" }, [
+                      _c("div", { staticClass: "col-md-6" }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-6" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-outline-light float-left",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.toggleAddLecture()
+                              }
+                            }
+                          },
+                          [_vm._v("Novo")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "btn btn-outline-primary bg-light float-right",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteLecture()
+                              }
+                            }
+                          },
+                          [_vm._v("Del")]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
                     _c("div", { staticClass: "card-body" }, [
-                      _c("h3", { staticClass: "card-title text-white" }, [
-                        _vm._v(_vm._s(_vm.lectureTitle))
+                      _c("div", { staticClass: "col-md-12" }, [
+                        !_vm.editLectureName
+                          ? _c(
+                              "h3",
+                              {
+                                staticClass: "card-title text-white",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.toggleEditLectureName()
+                                  }
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.selectedLecture.name))]
+                            )
+                          : _vm._e()
                       ]),
                       _vm._v(" "),
-                      _c("p", { staticClass: "card-text lead" }, [
-                        _vm._v(_vm._s(_vm.lectureDescription))
+                      _c("div", { staticClass: "row clearfix" }, [
+                        _c("div", { staticClass: "col-md-9" }, [
+                          _vm.editLectureName
+                            ? _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.selectedLecture.name,
+                                    expression: "selectedLecture.name"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: { type: "text" },
+                                domProps: {
+                                  value: _vm.selectedLecture.name,
+                                  innerHTML: _vm._s(_vm.selectedLecture.name)
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.selectedLecture,
+                                      "name",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-3" }, [
+                          _vm.editLectureName
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "btn btn-outline-light float-left",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.toggleEditLectureName()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Ok")]
+                              )
+                            : _vm._e()
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-12" }, [
+                        _vm.editLectureName || _vm.editLectureDescription
+                          ? _c("p")
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.editLectureDescription
+                          ? _c(
+                              "p",
+                              {
+                                staticClass: "card-text lead",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.toggleEditLectureDescription()
+                                  }
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.selectedLecture.description))]
+                            )
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row clearfix" }, [
+                        _c("div", { staticClass: "col-md-9" }, [
+                          _vm.editLectureDescription
+                            ? _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.selectedLecture.description,
+                                    expression: "selectedLecture.description"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: { type: "text" },
+                                domProps: {
+                                  value: _vm.selectedLecture.description,
+                                  innerHTML: _vm._s(
+                                    _vm.selectedLecture.description
+                                  )
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.selectedLecture,
+                                      "description",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-3" }, [
+                          _vm.editLectureDescription
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "btn btn-outline-light float-left",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.toggleEditLectureDescription()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Ok")]
+                              )
+                            : _vm._e()
+                        ])
                       ])
                     ])
                   ]
@@ -37945,15 +38361,16 @@ var render = function() {
                   },
                   attrs: { id: "list-tab", role: "tablist" }
                 },
-                _vm._l(_vm.lectures, function(lecture) {
+                _vm._l(_vm.newLectures, function(lecture) {
                   return _c(
                     "a",
                     {
+                      key: lecture.id,
                       staticClass: "list-group-item list-group-item-action",
-                      class: { active: lecture.active },
+                      class: { active: lecture.name == _vm.lectureName },
                       attrs: {
                         role: "tab",
-                        id: "list-aula-1-list",
+                        id: lecture.id,
                         href: lecture.href,
                         "aria-controls": lecture.ariaControls
                       },
@@ -37963,7 +38380,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v(_vm._s(lecture.title))]
+                    [_vm._v(_vm._s(lecture.name))]
                   )
                 }),
                 0
@@ -37977,7 +38394,18 @@ var render = function() {
     _c("div", { staticClass: "course-detail" }, [_vm._t("default")], 2)
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("div", { staticClass: "input-group-text" }, [
+        _vm._v("youtube.com/watch?v=")
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

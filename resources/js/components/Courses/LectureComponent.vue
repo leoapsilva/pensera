@@ -4,7 +4,7 @@
 <script>
     export default {
         props: {
-            title: { 
+            name: { 
                     string: '',
                     required: true},
             description: { 
@@ -19,37 +19,38 @@
 
         data() {    
             return {
-                active: false
+                active: false,
             };
         },
 
         mounted() {
             this.active = this.selected;
+            this.newName = this.name;
+            this.newDescription = this.description;
+            this.newLink = this.link;
         },
 
         computed: {
             //href="#list-home" 
             href() {
-                return '#list-' + this.title.toLowerCase().replace(/ /g,'-');
+                return '#list-' + this.name.toLowerCase().replace(/ /g,'-');
             },
             //id="list-home-list"
             id() {
-                return 'list-' + this.title.toLowerCase().replace(/ /g,'-') + '-list';
+                return 'list-' + this.name.toLowerCase().replace(/ /g,'-') + '-list';
             },
             //aria-controls="home"
             ariaControls() {
-                return this.title.toLowerCase().replace(/ /g,'-');
+                return this.name.toLowerCase().replace(/ /g,'-');
             },
             //aria-labelledby="list-home-list"
             ariaLabelledby() {
-                return 'list-' + this.title.toLowerCase().replace(/ /g,'-') + '-list';
+                return 'list-' + this.name.toLowerCase().replace(/ /g,'-') + '-list';
             },
             //src="https://www.youtube.com/embed/HCfPhZQz2CE?rel=0"
             src() {
                 return 'https://www.youtube.com/embed/' + this.link + '?rel=0';
             }
-
-
         }
     }
 
