@@ -3,8 +3,12 @@
         <div class="course">
             <div class="row">
                 <div class="col-8 ">
-                    {{this.lectureSRC}}
+                    <h1> {{this.courseName}} </h1>
+                    <h3> {{this.courseDescription}} </h3>
                     <div class="tab-content" id="nav-tabContent">
+
+                        <!-- Refactory to a component! -->
+                        <!-- BEGIN lecture-video-component -->
                         <div class="embed-responsive embed-responsive-16by9">
                             <iframe class="embed-responsive-item" :src="lectureSRC" allowfullscreen> </iframe>
                         </div>
@@ -28,30 +32,50 @@
                                 </div>
                         </div>-->
                     </div>
+                    <!-- END lecture-video-component -->
+                    <!-- Refactory to a component! -->
                 </div>
 
                 <div class="col-4 clearfix">
                     <div class="card bg-white" style="width: 25rem;">
-                        <div class="card-header">
-                            <div class="col-12">
+                        <div class="card-header col-md-12">
+                            <div class="col-md-10 float-left">
                                 <h5>{{courseName}}</h5>
+                            </div>
+                            <div class="col-md-2 float-left">
+                                <h4> <span class="badge badge-primary"> {{newLectures.length}}</span></h4>
                             </div>
                         </div>
                         <div class="card-body">
 
+                            <!-- Refactory to a component! -->
+                            <!-- BEGIN lecture-new-component -->
                             <div class="card text-primary bg-white" style="width: 23rem;" v-if="addLectureActive">
-                                <div class="card-header">
-                                    New Lecture
+                                <div class="card-header clear-fix">
+                                    <div class="col-md-10 float-left">
+                                        Novo
+                                    </div>
+                                    <div class="col-md-2 float-right">
+                                        <button type="button" class="close" aria-label="Close"
+                                            @click="toggleAddLecture()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body clear-fix">
                                     <div class="form-group col-md-12">
-                                        <label for="newName">Title</label>
-                                        <input type="text" class="form-control" v-model="newName" placeholder="Aula...">
+                                        <input  type="text" 
+                                                class="form-control" 
+                                                :class="{ 'border-danger' : newName == '' }"
+                                                v-model="newName" 
+                                                placeholder="Aula..." >
                                     </div>
                                     <div class="form-group col-md-12">
-                                        <label for="newDescription">Title</label>
-                                        <input type="text" class="form-control" v-model="newDescription"
-                                            placeholder="Descrição da aula...">
+                                        <input  type="text" 
+                                                class="form-control" 
+                                                :class="{ 'border-danger' : newDescription == '' }"
+                                                v-model="newDescription"
+                                                placeholder="Descrição da aula...">
                                     </div>
                                     <div class="col-md-12 my-1">
                                         <label class="sr-only" for="newLink">video ID</label>
@@ -59,82 +83,149 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">youtube.com/watch?v=</div>
                                             </div>
-                                            <input type="text" class="form-control" v-model="newLink"
-                                                placeholder="v1de01D">
+                                            <input  type="text" 
+                                                    class="form-control"
+                                                    :class="{ 'border-danger' : newLink == '' }"
+                                                    v-model="newLink"
+                                                    placeholder="v1de01D" >
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-outline-primary float-left"
-                                            @click="addLecture()">Add</button>
+                                    <div class="form-group col-md-12 clear-fix">
+                                        <button type="button" 
+                                                class="btn btn-outline-primary float-right"
+                                                v-if="newName != '' && newDescription != '' && newLink != ''"
+                                                @click="addLecture()">Add</button>
                                     </div>
                                 </div>
                             </div>
+                            <!-- END lecture-new-component -->
+                            <!-- Refactory to a component! -->
 
-
-                            <!-- <h5 class="card-title"><strong>{{courseName}}</strong></h5> -->
-                            <!-- <p class="card-text lead">{{courseDescription}}</p> -->
-
-                            <div class="card text-white bg-primary" style="width: 25rem;">
-                                <div class="card-header clearfix">
-                                    <div class="col-md-6"></div>
-                                    <div class="col-md-6">
-                                        <button type="button" class="btn btn-outline-light float-left"
-                                            @click="toggleAddLecture()">Novo</button>
-                                        <button type="button"
-                                            class="btn btn-outline-primary bg-light float-right"
-                                            @click="deleteLecture()">Del</button>
+                            <!-- Refactory to a component! -->
+                            <!-- BEGIN lecture-edit-component -->
+                            <!-- Lecture Name: Edit card -->
+                            <div class="card text-white bg-primary clearfix" style="width: 25rem;" v-if="!addLectureActive">
+                                <div class="card-header col-md-12">
+                                    <div class="col-md-10">
+                                        Toque no texto para editar.<br>
+                                        Toque fora ou tab para confirmar.
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-light float-right"
+                                            @click="toggleAddLecture()">+</button>
                                     </div>
                                 </div>
+
                                 <div class="card-body">
-                                    <div class="col-md-12">
-                                        <h3 class="card-title text-white" v-if="!editLectureName"
-                                            @click="toggleEditLectureName()">{{selectedLecture.name}}</h3>
-                                    </div>
 
-                                    <div class="row clearfix">
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" v-model="selectedLecture.name"
-                                                v-if="editLectureName" v-html="selectedLecture.name">
+                                    <div class="lecture-edit">
+                                        <!-- Lecture Name: Toggle edit -->
+                                        <div class="col-md-12">
+                                            <h3 class="card-title text-white" v-if="!editLectureName"
+                                                @click="toggleEditLectureName()">{{selectedLecture.name}}</h3>
                                         </div>
-                                        <div class="col-md-3">
-                                            <button type="button" class="btn btn-outline-light float-left"
-                                                v-if="editLectureName" @click="toggleEditLectureName()">Ok</button>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-12">
+                                        <!-- Lecture Name: Edit -->
+                                        <div class="row clearfix" v-if="editLectureName">
+                                            <div class="col-md-9">
+                                                <input  type="text" class="form-control" 
+                                                        v-model="selectedLecture.name"
+                                                        v-html="selectedLecture.name"
+                                                        @blur="toggleEditLectureName()">
+                                            </div>
+                                            
+                                            <!-- Lecture Name: Disable edit -->
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-outline-light float-left"
+                                                    @click="toggleEditLectureName()">Ok</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Adjust paragraph -->
                                         <p v-if="editLectureName || editLectureDescription"></p>
-                                        <p class="card-text lead" v-if="!editLectureDescription"
-                                            @click="toggleEditLectureDescription()">{{selectedLecture.description}}</p>
-                                    </div>
 
-
-                                    <div class="row clearfix">
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control"
-                                                v-model="selectedLecture.description" v-if="editLectureDescription"
-                                                v-html="selectedLecture.description">
+                                        <!-- Lecture Description: Toggle edit -->
+                                        <div class="col-md-12">
+                                            <p class="card-text lead" v-if="!editLectureDescription"
+                                                @click="toggleEditLectureDescription()">{{selectedLecture.description}}</p>
                                         </div>
-                                        <div class="col-md-3">
-                                            <button type="button" class="btn btn-outline-light float-left"
-                                                v-if="editLectureDescription"
-                                                @click="toggleEditLectureDescription()">Ok</button>
-                                        </div>
-                                    </div>
 
+                                        <!-- Lecture Name: Edit  -->
+                                        <div class="row clearfix" v-if="editLectureDescription">
+                                            <div class="col-md-9">
+                                                <input  type="text" class="form-control"
+                                                        v-model="selectedLecture.description" 
+                                                        v-html="selectedLecture.description"
+                                                        @blur="toggleEditLectureDescription()">
+                                            </div>
+                                            <!-- Lecture Name: Disable edit -->
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-outline-light float-left"
+                                                    @click="toggleEditLectureDescription()">Ok</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Adjust paragraph -->
+                                        <p v-if="editLectureDescription || editLectureLink"></p>
+
+                                        <!-- Lecture Link: Toggle edit -->
+                                        <div class="col-md-12">
+                                            <p class="card-text lead" v-if="!editLectureLink"
+                                                @click="toggleEditLectureLink()">
+                                                <span class="border-bottom border-light">
+                                                    youtube.com/{{selectedLecture.link}}
+                                                </span
+                                            ></p>
+                                        </div>
+                                        
+                                        <!-- Lecture Link: Toggle edit -->
+                                        <div class="row cleafix" v-if="editLectureLink">
+                                            <div class="input-group col-md-9">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">youtube.com/</div>
+                                                </div>
+                                                <input  type="text" class="form-control" 
+                                                        v-model="selectedLecture.link"
+                                                        @blur="toggleEditLectureLink()"
+                                                        placeholder="v1de01D">
+                                            </div>
+
+                                            <!-- Lecture Link: Disable edit -->
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-outline-light float-left"
+                                                    v-if="editLectureLink"
+                                                    @click="toggleEditLectureLink()">Ok</button>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <!-- END lecture-edit-component -->
+                                    <!-- Refactory to a component! -->
 
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Refactory to a component! -->
+                        <!-- BEGIN lectures-component -->
                         <div class="list-group" id="list-tab" role="tablist"
                             style="overflow:scroll;max-height: 250px;-webkit-overflow-scrolling: touch;">
 
-                            <a v-for="lecture in newLectures" v-bind:key="lecture.id" role="tab"
-                                class="list-group-item list-group-item-action"
-                                :class="{ 'active': lecture.name == lectureName }" :id="lecture.id" :href="lecture.href"
-                                :aria-controls="lecture.ariaControls"
-                                @click="selectLecture(lecture)">{{lecture.name}}</a>
+                            <div v-for="lecture in newLectures" v-bind:key="lecture.id" class="col-md-12 clearfix">
+                                <div class="col-md-10 float-left">
+                                    <a role="tab" class="list-group-item list-group-item-action"
+                                        :class="{ 'active': lecture.name == lectureName }" :id="lecture.id"
+                                        :href="lecture.href" :aria-controls="lecture.ariaControls"
+                                        @click="selectLecture(lecture)">{{lecture.name}}</a>
+                                </div>
+                                <div class="col-md-2 float-right">
+                                    <button type="button" class="btn btn-outline-primary bg-light "
+                                        @click="deleteLecture(lecture.id)">-</button>
+                                </div>
+                            </div>
                         </div>
+                        <!-- END lectures-component -->
+                        <!-- Refactory to a component! -->
+
                     </div>
                 </div>
             </div>
@@ -158,23 +249,42 @@
         },
         data() {
             return {
+                // Array of VueComponents - comes at first render
                 lectures: [],
+
+                // Array of Objects - created based on lectures
+                newLectures: [],
+                // Lecture id counter
                 nextLecture: 0,
+
                 courseName: this.name,
                 courseDescription: this.description,
+
+                // Selected Lecture - current Lecture 
                 selectedLecture: [],
+
+                //Error array
+                error: [],
+
+                // Trocar para selected
                 lectureName: '',
                 lectureDescription: '',
                 lectureLink: '',
                 lectureSRC: '',
+
+                // Fields to add a lecture
                 newName: '',
                 newDescription: '',
                 newLink: '',
-                newLectures: [],
+
+                // Flags to enable editing a lecture
                 editLectureName: false,
                 editLectureDescription: false,
                 editLectureLink: false,
                 addLectureActive: false,
+
+                //YT
+                player:'',
             }
         },
         created() {
@@ -214,13 +324,14 @@
                     lecture.active = (lecture.name == selectedLecture.name);
                 });
                 this.selectedLecture = selectedLecture;
-                this.setLectureSRC()
-
+                this.setLectureSRC();
             },
             setLectureSRC() {
                 this.lectureSRC = 'https://www.youtube.com/embed/' + this.lectureLink + '?rel=0'
+                // When using YT.player add --> &enablejsapi=1
             },
-            addLecture() {
+
+            addLecture: function(e) {
                 var newLecture = {
                     "id": this.nextLecture,
                     "name": this.newName,
@@ -229,18 +340,70 @@
                     "active": true,
                 };
 
-                this.newLectures.push(newLecture);
-                this.selectLecture(newLecture);
-                this.nextLecture++;
-                this.toggleAddLecture();
+                if (this.newName == '') {
+                    this.error.push({ 'name': true });
+               }
+                    
+                if (this.newDescription == '')
+                    this.error.push({ 'description': true });
+
+                if (this.newLink == '')
+                    this.error.push({ 'link': true });
+
+                console.log(this.error);
+ 
+                if (this.error.length == 0)
+                {
+                    this.newLectures.push(newLecture);
+                    this.selectLecture(newLecture);
+                    this.nextLecture++;
+                    this.toggleAddLecture();
+                    this.clearEditLectureFields();
+                    this.error = [];
+                }
+           },
+
+           /**
+            * Next step:
+            * Using https://www.npmjs.com/package/youtube-player
+            * Listen event of video finished then:
+            *   - Jump to the next
+            *   - Mark as seen
+            *   - Update student progress
+            * 
+            * Leo - 01/02/2020
+            * 
+            onYouTubeIframeAPIReady() {
+                    this.player = new YT.Player('player', {
+                    videoId: this.selectLecture.link,
+                    events: {
+                        'onStateChange': function(evt){
+                            if(evt.data == 0){
+                                window.external.Test('Video finished!!');
+                            }
+                        }
+                    }
+                })
+            },
+            */
+
+            deleteLecture: async function(id) {
+                this.nextLecture--;
+                var index = this.newLectures.map(function(e) { return e.id; }).indexOf(id);
+                this.newLectures.splice(index, 1);
+                if (index + 1 > this.newLectures.length) {
+                    this.selectLecture(this.newLectures[index - 1]);
+                }
+                else{
+                    this.selectLecture(this.newLectures[index]);
+                }
+                
             },
 
-            deleteLecture() {
-                this.nextLecture--;
-                var tempId = this.selectedLecture.id;
-                alert(tempId);  
-                this.newLectures.splice(tempId-1, 1);
-                this.selectLecture(this.newLectures[tempId + 1]);
+            clearEditLectureFields() {
+                this.newName = '';
+                this.newDescription = '';
+                this.newLink = '';
             },
 
             toggleEditLectureName() {
@@ -251,6 +414,7 @@
             },
             toggleEditLectureLink() {
                 this.editLectureLink = !this.editLectureLink;
+                this.selectLecture(this.selectedLecture);
             },
             toggleAddLecture() {
                 this.addLectureActive = !this.addLectureActive;
@@ -259,73 +423,3 @@
     }
 
 </script>
-<!--   <div class="card" style="width: 25rem;">
-            <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
-              </div>
-            <div class="card-body">
-              <h5 class="card-title">Tútulo do Curso</h5>
-              <p class="card-text">Alguma explicação rápida sobre o curso.</p>
-            </div>
-            <ul class="list-group list-group-flush" role="tablist">
-              <li class="list-group-item list-group-item-action active" id="list-aula-1-list" data-toggle="list" href="#list-aula-1" role="tab" aria-controls="aula-1">Aula 1 - Tema</li>
-              <li class="list-group-item list-group-item-action" id="list-aula-2-list" data-toggle="list" href="#list-aula-2" role="tab" aria-controls="aula-2">Aula 2 - Tema</li>
-              <li class="list-group-item list-group-item-action" id="list-aula-3-list" data-toggle="list" href="#list-aula-3" role="tab" aria-controls="aula-3">Aula 3 - Tema</li>
-            </ul>
-            <div class="card-body">
-              <a href="#" class="card-link">Próxima</a>
-              <a href="#" class="card-link">Anterior</a>
-            </div>
-          </div> -->
-
-
-
-<!--                         <div class="tab-pane fade show active" id="list-home" role="tabpanel"
-                            aria-labelledby="list-home-list">
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <iframe class="embed-responsive-item"
-                                    src="https://www.youtube.com/embed/KQ6zr6kCPj8?rel=0" allowfullscreen></iframe>
-                            </div>
-
-                        </div>
-                        <div class="tab-pane fade" id="list-profile" role="tabpanel"
-                            aria-labelledby="list-profile-list">
-
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <iframe class="embed-responsive-item"
-                                    src="https://www.youtube.com/embed/HCfPhZQz2CE?rel=0" allowfullscreen></iframe>
-                            </div>
-
-                        </div>
-                        <div class="tab-pane fade" id="list-messages" role="tabpanel"
-                            aria-labelledby="list-messages-list">
-
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <iframe class="embed-responsive-item"
-                                    src="https://www.youtube.com/embed/OPf0YbXqDm0?rel=0" allowfullscreen></iframe>
-                            </div>
-
-                        </div>
-                        <div class="tab-pane fade" id="list-settings" role="tabpanel"
-                            aria-labelledby="list-settings-list">
-
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <iframe class="embed-responsive-item"
-                                    src="https://www.youtube.com/embed/ZbZSe6N_BXs?rel=0" allowfullscreen></iframe>
-                            </div>
- -->
-
-
-<!--                                     <a class="list-group-item list-group-item-action active" id="list-home-list"
-                                        data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
-                                    <a class="list-group-item list-group-item-action" id="list-profile-list"
-                                        data-toggle="list" href="#list-profile" role="tab"
-                                        aria-controls="profile">Profile</a>
-                                    <a class="list-group-item list-group-item-action" id="list-messages-list"
-                                        data-toggle="list" href="#list-messages" role="tab"
-                                        aria-controls="messages">Messages</a>
-                                    <a class="list-group-item list-group-item-action" id="list-settings-list"
-                                        data-toggle="list" href="#list-settings" role="tab"
-                                        aria-controls="settings">Settings</a> -->
-
-<!-- {"id": 7, "name": "Aula 7", "description": "Description", "link": "KQ6zr6kCPj8", "selected": true} -->
