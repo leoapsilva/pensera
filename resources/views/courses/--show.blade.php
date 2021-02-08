@@ -14,15 +14,13 @@
         <div class="container">
             <tabs name="bla">
                 <tab name="Course" :selected="true">
-                    <course-component v-for="lecture in course" name=@{{course.name}} description=@{{course.description}}">
-                        <lecture-component id=@{{lecture.id}} name=@{{lecture.name}} description=@{{lecture.description}} link=@{{lecture.link}} :selected="true"> </lecture-component>
-                    </course-component>
+                    <course-panel :id={{$course->id}}></course-panel>
                 </tab>
                 <tab name="Students" >
-                    <h1> Here is the content of the our culture. </h1>
+                    <h1> Here you have all students enrolled on the course. </h1>
                 </tab>
                 <tab name="Edit">
-                    <h1> Here is the content of the contact us. </h1>
+                    <h1> Here you can edit you course. </h1>
                 </tab>
             </tabs>
         </div>

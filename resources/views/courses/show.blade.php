@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -14,8 +15,10 @@
         <div class="container">
             <tabs name="bla">
                 <tab name="Course" :selected="true">
-                    <course-component v-for="lecture in course" name=@{{course.name}} description=@{{course.description}}">
-                        <lecture-component id=@{{lecture.id}} name=@{{lecture.name}} description=@{{lecture.description}} link=@{{lecture.link}} :selected="true"> </lecture-component>
+                    <course-component id="{{$course->id}}" name="{{$course->name}}" description="{{$course->description}}">
+                        @foreach ($course->lectures as $lecture)
+                            <lecture-component id="{{$lecture->id}}" name="{{$lecture->name}}" description="{{$lecture->description}}" link="{{$lecture->link}}" :selected="true"> </lecture-component>
+                        @endforeach
                     </course-component>
                 </tab>
                 <tab name="Students" >

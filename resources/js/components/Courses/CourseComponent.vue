@@ -131,13 +131,13 @@
                                                 <input  type="text" class="form-control" 
                                                         v-model="selectedLecture.name"
                                                         v-html="selectedLecture.name"
-                                                        @blur="toggleEditLectureName()">
+                                                        @blur="updateLecture(selectedLecture.id, 'name')">
                                             </div>
                                             
                                             <!-- Lecture Name: Disable edit -->
                                             <div class="col-md-3">
                                                 <button type="button" class="btn btn-outline-light float-left"
-                                                    @click="toggleEditLectureName()">Ok</button>
+                                                    @click="updateLecture(selectedLecture.id, 'name')">Ok</button>
                                             </div>
                                         </div>
 
@@ -156,12 +156,12 @@
                                                 <input  type="text" class="form-control"
                                                         v-model="selectedLecture.description" 
                                                         v-html="selectedLecture.description"
-                                                        @blur="toggleEditLectureDescription()">
+                                                        @blur="updateLecture(selectedLecture.id, 'description')">
                                             </div>
                                             <!-- Lecture Name: Disable edit -->
                                             <div class="col-md-3">
                                                 <button type="button" class="btn btn-outline-light float-left"
-                                                    @click="toggleEditLectureDescription()">Ok</button>
+                                                    @click="updateLecture(selectedLecture.id, 'description')">Ok</button>
                                             </div>
                                         </div>
 
@@ -186,7 +186,7 @@
                                                 </div>
                                                 <input  type="text" class="form-control" 
                                                         v-model="selectedLecture.link"
-                                                        @blur="toggleEditLectureLink()"
+                                                        @blur="updateLecture(selectedLecture.id, 'link')"
                                                         placeholder="v1de01D">
                                             </div>
 
@@ -194,7 +194,7 @@
                                             <div class="col-md-3">
                                                 <button type="button" class="btn btn-outline-light float-left"
                                                     v-if="editLectureLink"
-                                                    @click="toggleEditLectureLink()">Ok</button>
+                                                    @click="updateLecture(selectdLecture.id, 'link')">Ok</button>
                                             </div>
                                         </div>
                                     </div> 
@@ -246,9 +246,15 @@
             description: {
                 string: ''
             },
+            id: {
+                number:''
+            }
         },
         data() {
             return {
+                //courses array
+                courses: [],
+                
                 // Array of VueComponents - comes at first render
                 lectures: [],
 
@@ -259,6 +265,7 @@
 
                 courseName: this.name,
                 courseDescription: this.description,
+                courseId: this.id,
 
                 // Selected Lecture - current Lecture 
                 selectedLecture: [],
@@ -293,12 +300,14 @@
         },
 
         mounted() {
+
             this.lectures.forEach(lecture => {
                 this.newLectures.push({
-                    "id": this.nextLecture,
+                    "id": lecture.id,
                     "name": lecture.name,
                     "description": lecture.description,
                     "link": lecture.link,
+                    "course_id": this.courseId,
                     "active": lecture.active
                 });
                 this.nextLecture++;
@@ -310,9 +319,8 @@
                 }
             });
             this.lectureLink = this.newLectures[0].link;
-            this.selectedLecture = this.newLectures[0]
-            this.setLectureSRC();
-            console.log(this.$children);
+            this.selectedLecture = this.newLectures[0];
+            this.selectLecture(this.selectedLecture);
         },
 
         methods: {
@@ -320,6 +328,7 @@
                 this.lectureName = selectedLecture.name;
                 this.lectureDescription = selectedLecture.description;
                 this.lectureLink = selectedLecture.link;
+                this.lectureId = selectedLecture.id;
                 this.lectures.forEach(lecture => {
                     lecture.active = (lecture.name == selectedLecture.name);
                 });
@@ -333,17 +342,16 @@
 
             addLecture: function(e) {
                 var newLecture = {
-                    "id": this.nextLecture,
                     "name": this.newName,
                     "description": this.newDescription,
                     "link": this.newLink,
+                    "course_id": this.courseId,
                     "active": true,
                 };
 
                 if (this.newName == '') {
                     this.error.push({ 'name': true });
-               }
-                    
+                }
                 if (this.newDescription == '')
                     this.error.push({ 'description': true });
 
@@ -360,8 +368,22 @@
                     this.toggleAddLecture();
                     this.clearEditLectureFields();
                     this.error = [];
-                }
-           },
+                    console.log(newLecture);
+
+                    axios.post('/lecture',
+                                {          "name":  newLecture.name,
+                                            "description": newLecture.description,
+                                            "link": newLecture.link,
+                                            "course_id": this.courseId,
+                                    
+                            })
+                        .then(res => {
+                            commit('CREATE_LECTURE', res.data)
+                        }).catch(err => {
+                        console.log(err)
+                    });
+               }
+            },
 
            /**
             * Next step:
@@ -387,7 +409,7 @@
             },
             */
 
-            deleteLecture: async function(id) {
+            deleteLecture(id) {
                 this.nextLecture--;
                 var index = this.newLectures.map(function(e) { return e.id; }).indexOf(id);
                 this.newLectures.splice(index, 1);
@@ -398,12 +420,56 @@
                     this.selectLecture(this.newLectures[index]);
                 }
                 
+                axios.delete('/lecture/'+id)
+                .then(res => {
+                    commit('DELETE_LECTURE', res.data)
+                }).catch(err => {
+                console.log(err)
+                });
+            },
+
+            doUpdateLecture: async function(id) {
+                var updatedLecture = {  
+                    "id": id,
+                    "name":  this.selectedLecture.name,
+                    "description": this.selectedLecture.description,
+                    "link": this.selectedLecture.link,
+                    "course_id": this.courseId,
+                                };
+
+                axios.put('/lecture/'+updatedLecture.id, updatedLecture)
+                    .then(res => {
+                        commit('UPDATE_LECTURE', res.data)
+                    }).catch(err => {
+                    console.log(err)
+                    });
+            },
+
+            updateLecture(id, field) {
+                
+                var index = this.lectures.map(function(e) { return e.id; }).indexOf(id);
+
+                if(field == 'name')  
+                    this.toggleEditLectureName();
+
+                if(field == 'description')
+                    this.toggleEditLectureDescription();
+
+                if(field == 'link')
+                    this.toggleEditLectureLink();
+
+                if (this.selectedLecture[field] != this.lectures[index][field])
+                    this.doUpdateLecture(id);
             },
 
             clearEditLectureFields() {
                 this.newName = '';
                 this.newDescription = '';
                 this.newLink = '';
+            },
+
+            toggleEditLecture(field) {
+                this.editLecture[field] = !this.editLecture[field];
             },
 
             toggleEditLectureName() {

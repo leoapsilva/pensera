@@ -21,8 +21,17 @@ window.Vue = require('vue').default;
 
 Vue.component('tabs', require('./components/tabs/Tabs.vue').default);
 Vue.component('tab', require('./components/tabs/Tab.vue').default);
-Vue.component('lecture-component', require('./components/Courses/LectureComponent.vue').default);
-Vue.component('course-component', require('./components/Courses/CourseComponent.vue').default);
+Vue.component('lecture-component', require('./components/courses/LectureComponent.vue').default);
+Vue.component('course-component', require('./components/courses/CourseComponent.vue').default);
+Vue.component('course-list', require('./components/courses/CourseList.vue').default);
+Vue.component('course-card', require('./components/courses/CourseCard.vue').default);
+Vue.component('course-panel', require('./components/courses/CoursePanel.vue').default);
+Vue.component('course-video-frame', require('./components/courses/CourseVideoFrame.vue').default);
+Vue.component('course-lectures-panel', require('./components/courses/CourseLecturesPanel.vue').default);
+Vue.component('lecture-list', require('./components/courses/LectureList.vue').default);
+Vue.component('lecture-edit', require('./components/courses/LectureEdit.vue').default);
+Vue.component('lecture-add', require('./components/courses/LectureAdd.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

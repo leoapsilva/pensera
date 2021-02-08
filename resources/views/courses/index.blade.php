@@ -14,10 +14,20 @@
         <div class="container">
             <tabs name="bla">
                 <tab name="Course" :selected="true">
-                    <course-component v-for="lecture in course" name=@{{course.name}} description=@{{course.description}}">
-                        <lecture-component id=@{{lecture.id}} name=@{{lecture.name}} description=@{{lecture.description}} link=@{{lecture.link}} :selected="true"> </lecture-component>
+                    <course-list></course-list>
+
+{{--                     <course-component v-for="lecture in courses" v-bind:key="lecture.id" v-text="lecture">
+                        
                     </course-component>
-                </tab>
+ --}}{{--                     <course-component v-for="lecture in course" v-bind:key="lecture.id"
+                        :name=@{{course.name}} :description=@{{course.description}}">
+                        <lecture-component  :id=@{{lecture.id}} 
+                                            :name=@{{lecture.name}} 
+                                            :description=@{{lecture.description}} 
+                                            :link=@{{lecture.link}} 
+                                            :selected="true"> </lecture-component>
+                    </course-component>
+ --}}                </tab>
                 <tab name="Students" >
                     <h1> Here is the content of the our culture. </h1>
                 </tab>

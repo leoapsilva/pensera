@@ -4,6 +4,10 @@
 <script>
     export default {
         props: {
+            id: {
+                    number: 0,
+                    required: true,
+            },
             name: { 
                     string: '',
                     required: true},
@@ -36,10 +40,10 @@
                 return '#list-' + this.name.toLowerCase().replace(/ /g,'-');
             },
             //id="list-home-list"
-            id() {
+/*             id() {
                 return 'list-' + this.name.toLowerCase().replace(/ /g,'-') + '-list';
             },
-            //aria-controls="home"
+ */            //aria-controls="home"
             ariaControls() {
                 return this.name.toLowerCase().replace(/ /g,'-');
             },
