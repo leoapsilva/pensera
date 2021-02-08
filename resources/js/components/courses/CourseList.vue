@@ -28,7 +28,7 @@
             }
         },
         mounted() {
-            axios.get('/course-list').then(response => this.courses = response.data);
+            axios.get('/courses-list').then(response => this.courses = response.data);
             console.log('courses mounted');
         },
         methods: {},

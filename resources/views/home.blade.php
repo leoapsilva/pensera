@@ -15,6 +15,10 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                    <div class="row justify-content-center">
+                        <button type="button" onclick="window.location = '/courses'" class="btn btn-lg btn-primary">{{ __('Enter') }} </button>
+                    </div>
+
                 </div>
             </div>
         </div>

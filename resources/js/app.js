@@ -25,12 +25,7 @@ Vue.component('lecture-component', require('./components/courses/LectureComponen
 Vue.component('course-component', require('./components/courses/CourseComponent.vue').default);
 Vue.component('course-list', require('./components/courses/CourseList.vue').default);
 Vue.component('course-card', require('./components/courses/CourseCard.vue').default);
-Vue.component('course-panel', require('./components/courses/CoursePanel.vue').default);
-Vue.component('course-video-frame', require('./components/courses/CourseVideoFrame.vue').default);
-Vue.component('course-lectures-panel', require('./components/courses/CourseLecturesPanel.vue').default);
-Vue.component('lecture-list', require('./components/courses/LectureList.vue').default);
-Vue.component('lecture-edit', require('./components/courses/LectureEdit.vue').default);
-Vue.component('lecture-add', require('./components/courses/LectureAdd.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

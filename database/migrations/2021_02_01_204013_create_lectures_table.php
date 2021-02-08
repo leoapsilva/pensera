@@ -22,7 +22,7 @@ class CreateLecturesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('course_id')->references('id')->on('courses');
-            $table->unique(['course_id', 'name']);
+            $table->unique(['course_id', 'id']);
         });
     }
 

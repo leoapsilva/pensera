@@ -38,7 +38,6 @@ class LectureController extends Controller
     {
         return Lecture::create($request->validated());
 
-        //return redirect('/Lectures');
     }
 
     /**
@@ -77,14 +76,12 @@ class LectureController extends Controller
      * @param  \App\Models\Lecture  $Lecture
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Lecture $Lecture)   
+/*     public function destroy(Lecture $Lecture)   
     {
         return $Lecture->delete();
-        
-        //return redirect('/Lectures');
     }
-
-    public function delete($id) {
+ */
+    public function destroy($id) {
 
         if(Lecture::where('id', $id)->exists()) {
             $lecture = Lecture::find($id);

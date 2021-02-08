@@ -23,22 +23,30 @@ use SebastianBergmann\Environment\Console;
 |
 */
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 Auth::routes();
 
-Route::get('/courses', [CourseController::class, 'index']);
+Route::get('/courses', [CourseController::class, 'index'])
+    ->middleware('auth');
 
-Route::get('/courses/{course}', [CourseController::class, 'show']);
+Route::get('/courses/{course}', [CourseController::class, 'show'])
+    ->middleware('auth');
 
-Route::get('courses-list', function () {
+Route::get('/courses-list', function () {
     return Course::with('lectures')->get();
-});
+})->middleware('auth');
+
 
 Route::get('courses/{course}/lectures', function ($id) {
     return Course::with('lectures')->findOrFail($id);
-});
+})->middleware('auth');
 
-Route::put('lecture/{id}', [LectureController::class, 'update']);
+Route::put('lecture/{id}', [LectureController::class, 'update'])
+    ->middleware('auth');
 
-Route::post('lecture', [LectureController::class, 'store']);
+Route::post('lecture', [LectureController::class, 'store'])
+    ->middleware('auth');
 
-Route::delete('lecture/{id}', [LectureController::class, 'delete']);
+Route::delete('lecture/{id}', [LectureController::class, 'destroy'])
+    ->middleware('auth');

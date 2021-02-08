@@ -213,7 +213,7 @@
                             <div v-for="lecture in newLectures" v-bind:key="lecture.id" class="col-md-12 clearfix">
                                 <div class="col-md-10 float-left">
                                     <a role="tab" class="list-group-item list-group-item-action"
-                                        :class="{ 'active': lecture.name == lectureName }" :id="lecture.id"
+                                        :class="{ 'active': lecture.id == lectureId }" :id="lecture.id"
                                         :href="lecture.href" :aria-controls="lecture.ariaControls"
                                         @click="selectLecture(lecture)">{{lecture.name}}</a>
                                 </div>
@@ -413,13 +413,23 @@
                 this.nextLecture--;
                 var index = this.newLectures.map(function(e) { return e.id; }).indexOf(id);
                 this.newLectures.splice(index, 1);
-                if (index + 1 > this.newLectures.length) {
-                    this.selectLecture(this.newLectures[index - 1]);
+                console.log("this.newLectures.length = " + this.newLectures.length);
+
+                if (this.newLectures.length == 0) {
+                    this.selectedLecture.name = '';
+                    this.selectedLecture.link = '';
+                    this.selectedLecture.description = '';
+                    this.lectureSRC = '';   
                 }
-                else{
-                    this.selectLecture(this.newLectures[index]);
+                else {
+                    if (index + 1 > this.newLectures.length) {
+                        this.selectLecture(this.newLectures[index - 1]);
+                    }
+                    else{
+                        this.selectLecture(this.newLectures[index]);
+                    }
                 }
-                
+
                 axios.delete('/lecture/'+id)
                 .then(res => {
                     commit('DELETE_LECTURE', res.data)
