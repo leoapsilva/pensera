@@ -23,9 +23,14 @@ use SebastianBergmann\Environment\Console;
 |
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', function () { return redirect()->route('home'); });
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
+
+Route::post('courses', [CourseController::class, 'store'])
+    ->middleware('auth');
 
 Route::get('/courses', [CourseController::class, 'index'])
     ->middleware('auth');
@@ -34,7 +39,7 @@ Route::get('/courses/{course}', [CourseController::class, 'show'])
     ->middleware('auth');
 
 Route::get('/courses-list', function () {
-    return Course::with('lectures')->get();
+    return  Course::with('lectures')->where('professor_id',Auth::user()->id)->get();
 })->middleware('auth');
 
 

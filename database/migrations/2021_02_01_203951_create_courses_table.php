@@ -20,7 +20,7 @@ class CreateCoursesTable extends Migration
             $table->string('description', 250);
             $table->timestamps();
             $table->softDeletes();
-            $table->unique(['professor_id', 'name']);
+            $table->unique(['professor_id', 'id']);
         });
     }
 

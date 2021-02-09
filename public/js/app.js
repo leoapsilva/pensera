@@ -1875,11 +1875,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    id: 0,
-    name: '',
-    description: '',
+    id: Number,
+    name: String,
+    description: String,
     lectures: Array
   },
   data: function data() {
@@ -1888,7 +1889,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {},
   methods: {
     mounted: function mounted() {
-      console.log('course mounted');
+      console.log('this.id = ' + this.id + ' course mounted');
     }
   },
   computed: {
@@ -2187,7 +2188,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       selectedLecture: [],
       //Error array
       error: [],
-      // Trocar para selected
+      // temp Selected
+      lectureId: '',
       lectureName: '',
       lectureDescription: '',
       lectureLink: '',
@@ -2241,7 +2243,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.lectureLink = selectedLecture.link;
       this.lectureId = selectedLecture.id;
       this.lectures.forEach(function (lecture) {
-        lecture.active = lecture.name == selectedLecture.name;
+        lecture.active = lecture.id == selectedLecture.id;
       });
       this.selectedLecture = selectedLecture;
       this.setLectureSRC();
@@ -2423,6 +2425,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2443,11 +2483,16 @@ __webpack_require__.r(__webpack_exports__);
     name: String,
     description: String,
     id: Number,
-    lectures: Array
+    lectures: Array,
+    user_id: Number
   },
   data: function data() {
     return {
-      courses: []
+      courses: [],
+      error: [],
+      // Fields to add a course
+      newName: '',
+      newDescription: ''
     };
   },
   mounted: function mounted() {
@@ -2458,7 +2503,54 @@ __webpack_require__.r(__webpack_exports__);
     });
     console.log('courses mounted');
   },
-  methods: {}
+  methods: {
+    addCourse: function () {
+      var _addCourse = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(e) {
+        var newCourse;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                newCourse = {
+                  "name": this.newName,
+                  "description": this.newDescription,
+                  "lectures": [],
+                  "professor_id": '1',
+                  "id": this.courses.length + 1
+                };
+                this.courses.push(newCourse);
+                this.courses.length;
+                this.clearEditCourseFields();
+                axios.post('/courses', {
+                  "name": newCourse.name,
+                  "description": newCourse.description,
+                  "professor_id": this.user_id
+                }).then(function (res) {
+                  commit('CREATE_COURSE', res.data);
+                })["catch"](function (err) {
+                  console.log(err);
+                });
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function addCourse(_x) {
+        return _addCourse.apply(this, arguments);
+      }
+
+      return addCourse;
+    }(),
+    clearEditCourseFields: function clearEditCourseFields() {
+      this.newName = '';
+      this.newDescription = '';
+      this.newLink = '';
+    }
+  }
 });
 
 /***/ }),
@@ -38898,8 +38990,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CourseList_vue_vue_type_template_id_2d00abbb___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CourseList.vue?vue&type=template&id=2d00abbb& */ "./resources/js/components/courses/CourseList.vue?vue&type=template&id=2d00abbb&");
 /* harmony import */ var _CourseList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CourseList.vue?vue&type=script&lang=js& */ "./resources/js/components/courses/CourseList.vue?vue&type=script&lang=js&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-/* harmony import */ var _CourseList_vue_vue_type_custom_index_0_blockType_div_class_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CourseList.vue?vue&type=custom&index=0&blockType=div&class=container */ "./resources/js/components/courses/CourseList.vue?vue&type=custom&index=0&blockType=div&class=container");
-/* harmony import */ var _CourseList_vue_vue_type_custom_index_0_blockType_div_class_container__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_CourseList_vue_vue_type_custom_index_0_blockType_div_class_container__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
@@ -38917,10 +39007,6 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
   null
   
 )
-
-/* custom blocks */
-;
-if (typeof (_CourseList_vue_vue_type_custom_index_0_blockType_div_class_container__WEBPACK_IMPORTED_MODULE_3___default()) === 'function') _CourseList_vue_vue_type_custom_index_0_blockType_div_class_container__WEBPACK_IMPORTED_MODULE_3___default()(component)
 
 /* hot reload */
 if (false) { var api; }
@@ -39176,16 +39262,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/courses/CourseList.vue?vue&type=custom&index=0&blockType=div&class=container":
-/*!**************************************************************************************************************!*\
-  !*** ./resources/js/components/courses/CourseList.vue?vue&type=custom&index=0&blockType=div&class=container ***!
-  \**************************************************************************************************************/
-/***/ (() => {
-
-
-
-/***/ }),
-
 /***/ "./resources/js/components/courses/CourseList.vue?vue&type=template&id=2d00abbb&":
 /*!***************************************************************************************!*\
   !*** ./resources/js/components/courses/CourseList.vue?vue&type=template&id=2d00abbb& ***!
@@ -39274,7 +39350,9 @@ var render = function() {
     _c("div", { staticClass: "card" }, [
       _c("div", { staticClass: "card-header col-md-12" }, [
         _c("div", { staticClass: "col-md-10 float-left" }, [
-          _c("h5", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.name))])
+          _c("h5", { staticClass: "card-title" }, [
+            _vm._v(_vm._s(_vm.id + " " + _vm.name))
+          ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-md-2 float-left" }, [
@@ -39300,7 +39378,9 @@ var render = function() {
           [_vm._v("Começar")]
         )
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _c("span", { staticClass: "row" }, [_vm._v("   ")])
   ])
 }
 var staticRenderFns = []
@@ -39974,24 +40054,132 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c(
-      "div",
-      { staticClass: "row" },
-      _vm._l(_vm.courses, function(course) {
-        return _c("course-card", {
-          key: course.id,
-          attrs: {
-            name: course.name,
-            description: course.description,
-            id: course.id,
-            lectures: course.lectures
-          }
-        })
-      }),
-      1
-    )
-  ])
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c(
+        "tabs",
+        { attrs: { name: "bla" } },
+        [
+          _c("tab", { attrs: { name: "Courses", selected: true } }, [
+            _c(
+              "div",
+              { staticClass: "row" },
+              _vm._l(_vm.courses, function(course) {
+                return _c("course-card", {
+                  key: course.id,
+                  attrs: {
+                    name: course.name,
+                    description: course.description,
+                    id: course.id,
+                    lectures: course.lectures
+                  }
+                })
+              }),
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("tab", { attrs: { name: "New" } }, [
+            _c("div", { staticClass: "row col-md-12" }, [
+              _c("div", { staticClass: "col-md-4 clearfix" }, [
+                _c("div", { staticClass: "card text-primary bg-white" }, [
+                  _c("div", { staticClass: "card-header clear-fix" }, [
+                    _c("div", { staticClass: "col-md-10 float-left" }, [
+                      _vm._v(
+                        "\n                                Novo\n                            "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body clear-fix" }, [
+                    _c("div", { staticClass: "form-group col-md-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.newName,
+                            expression: "newName"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        class: { "border-danger": _vm.newName == "" },
+                        attrs: { type: "text", placeholder: "Curso..." },
+                        domProps: { value: _vm.newName },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.newName = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.newDescription,
+                            expression: "newDescription"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        class: { "border-danger": _vm.newDescription == "" },
+                        attrs: {
+                          type: "text",
+                          placeholder: "Descrição do curso..."
+                        },
+                        domProps: { value: _vm.newDescription },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.newDescription = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group col-md-12 clear-fix" },
+                      [
+                        _vm.newName != "" && _vm.newDescription != ""
+                          ? _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn btn-outline-primary float-right",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.addCourse()
+                                  }
+                                }
+                              },
+                              [_vm._v("Add")]
+                            )
+                          : _vm._e()
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

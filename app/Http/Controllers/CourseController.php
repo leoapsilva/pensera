@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
@@ -16,7 +17,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        return view('courses.index', ['courses' => Course::with('lectures')->get()]);
+        return view('courses.index', ['courses' => Course::with('lectures')
+            ->where('professor_id', Auth::user()->id)->get()]);
     }
 
     /**

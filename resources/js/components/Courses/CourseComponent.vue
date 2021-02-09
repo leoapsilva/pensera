@@ -273,7 +273,8 @@
                 //Error array
                 error: [],
 
-                // Trocar para selected
+                // temp Selected
+                lectureId: '',
                 lectureName: '',
                 lectureDescription: '',
                 lectureLink: '',
@@ -318,6 +319,7 @@
                     this.lectureDescription = lecture.description;
                 }
             });
+
             this.lectureLink = this.newLectures[0].link;
             this.selectedLecture = this.newLectures[0];
             this.selectLecture(this.selectedLecture);
@@ -330,7 +332,7 @@
                 this.lectureLink = selectedLecture.link;
                 this.lectureId = selectedLecture.id;
                 this.lectures.forEach(lecture => {
-                    lecture.active = (lecture.name == selectedLecture.name);
+                    lecture.active = (lecture.id == selectedLecture.id);
                 });
                 this.selectedLecture = selectedLecture;
                 this.setLectureSRC();

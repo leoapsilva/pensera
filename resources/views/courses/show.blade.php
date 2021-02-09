@@ -1,11 +1,11 @@
 @extends('layout')
 @section('content')
-    
+
+    <div class="container">
+        <a href="/courses"> Courses </a> > {{$course->name}}
+    </div>
     <div class="container">
             <tabs name="bla">
-                <tab name="Courses">
-                    <course-list></course-list>
-                </tab>
                 <tab name="{{$course->name}}" :selected="true">
                     <course-component id="{{$course->id}}" name="{{$course->name}}"
                         description="{{$course->description}}">

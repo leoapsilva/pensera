@@ -2,11 +2,7 @@
 @section('content')
 
 <div class="container">
-    <tabs name="bla">
-        <tab name="Courses" :selected="true">
-            <course-list></course-list>
-        </tab>
-    </tabs>
+    <course-list :user_id="{{Auth::user()->id}}"></course-list>
 </div>
 
 @endsection
